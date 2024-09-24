@@ -21,10 +21,6 @@ jobs:
     steps:
     - name: checkout repository
       uses: actions/checkout@v2
-    - name: List contents of jobs directory
-      run: |
-        echo "Contents of jobs directory:"
-        ls -la jobs/
     - name: setup python 3.9
       uses: actions/setup-python@v4
       with: 
@@ -43,8 +39,19 @@ jobs:
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
+    - name: Install Azure CLI
+      run: |
+        curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
+    - name: Install Azure ML CLI extension
+      run: |
+        az version
+        az extension add -n ml -y
     - name: upload to azure
-      run: az ml data create -f data_upload.yml
+      run: |
+        az version
+        az extension list
+        az ml -h
+        az ml data create -f data_upload.yml
       working-directory: jobs
     - name: Commit and push if changed
       run: |
