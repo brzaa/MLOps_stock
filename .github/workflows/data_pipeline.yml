@@ -9,6 +9,10 @@ on:
   schedule:
     - cron: "1 1 * * 1"
   workflow_dispatch:
+  push:
+    paths:
+      - 'jobs/data_download.py'
+      - '.github/workflows/data_pipeline.yml'
 
 jobs:
   datawork:
@@ -16,9 +20,6 @@ jobs:
     steps:
     - name: checkout repository
       uses: actions/checkout@v2
-      with:
-        token: ${{ secrets.PAT }}
-        repository: 'brzaa/MLOps_stock'
     - name: setup python 3.9
       uses: actions/setup-python@v4
       with: 
@@ -28,28 +29,18 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: download ticker data and update yml file
-      run: python data_download.py --ticker $ticker --start $start --end $end
-      id: data
-      working-directory: jobs
+      run: python jobs/data_download.py --ticker ${{ env.ticker }} --start ${{ env.start }} --end ${{ env.end }}
     - name: edit yaml files
-      run: python update_training_yamls.py
-      working-directory: jobs
-    - name: push files to github
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-        git add -A
-        git commit -m "Ticker data for $ticker downloaded and YAML file updated." || exit 0
-        git push https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git HEAD
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: python jobs/update_training_yamls.py
     - name: azure login
       uses: azure/login@v1
       with:
-        creds: ${{secrets.AZURE_CREDENTIALS}}
-    - name: setup
-      run: bash setup.sh
-      working-directory: cli
-      continue-on-error: true
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
     - name: upload to azure
       run: az ml data create -f jobs/data_upload.yml
+    - name: Commit and push if changed
+      run: |
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
+        git add -A
+        git diff --quiet && git diff --staged --quiet || (git commit -m "Auto update data files" && git push)
