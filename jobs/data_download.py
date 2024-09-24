@@ -3,6 +3,7 @@ import pandas as pd
 from datetime import datetime
 import argparse
 import yaml
+import os
 
 def get_ticker_data(ticker, start, end):
     stock = yf.Ticker(ticker)
@@ -27,7 +28,7 @@ def save_to_data_upload(df, tags, ticker):
         'type': 'uri_file',
         'name': ticker,
         'description': f"Stock data for {ticker} during {tags['Start']}:{tags['End']} in 1d interval.",
-        'path': f'../data/{ticker}.csv',
+        'path': f'data/{ticker}.csv',
         'tags': tags,
         'version': current_date
     }
@@ -43,6 +44,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     df = get_ticker_data(args.ticker, args.start, args.end)
+    
+    # Create data directory if it doesn't exist
+    os.makedirs('data', exist_ok=True)
+    
     df.to_csv(f'data/{args.ticker}.csv', index=False)
     
     tags = get_dataset_tags(df)
