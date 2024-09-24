@@ -4,6 +4,16 @@ import numpy as np
 from datetime import datetime
 import argparse
 import yaml
+import re
+
+def sanitize_name(name):
+    # Remove any character that's not alphanumeric, dash, or underscore
+    sanitized = re.sub(r'[^a-zA-Z0-9\-_]', '', name)
+    # Ensure the name starts with a letter or number
+    if not sanitized[0].isalnum():
+        sanitized = 'a' + sanitized
+    # Truncate to 255 characters if necessary
+    return sanitized[:255]
 
 def get_ticker_data(ticker, start, end):
     stock = yf.Ticker(ticker)
@@ -23,12 +33,13 @@ def get_dataset_tags(df):
 
 def save_to_data_upload(df, tags, ticker):
     current_date = datetime.now().strftime('%Y%m%d')
+    sanitized_ticker = sanitize_name(ticker)
     yaml_content = {
         '$schema': 'https://azuremlschemas.azureedge.net/latest/data.schema.json',
         'type': 'uri_file',
-        'name': ticker,
+        'name': sanitized_ticker,
         'description': f"Stock data for {ticker} during {tags['Start']}:{tags['End']} in 1d interval.",
-        'path': f'data/{ticker}.csv',
+        'path': f'data/{sanitized_ticker}.csv',
         'tags': tags,
         'version': current_date
     }
@@ -53,11 +64,11 @@ if __name__ == "__main__":
 
     df = get_ticker_data(args.ticker, args.start, args.end)
     
-    # Create data directory if it doesn't exist
     import os
     os.makedirs('data', exist_ok=True)
     
-    df.to_csv(f'data/{args.ticker}.csv', index=False)
+    sanitized_ticker = sanitize_name(args.ticker)
+    df.to_csv(f'data/{sanitized_ticker}.csv', index=False)
     
     tags = get_dataset_tags(df)
     save_to_data_upload(df, tags, args.ticker)
