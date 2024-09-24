@@ -4,8 +4,8 @@ env:
   ticker: MASB.JK
   start: 2020-01-01
   end: 2023-12-31
-  AZURE_RESOURCE_GROUP: bramastyaz-rg
-  AZURE_ML_WORKSPACE: mlops-thesis
+  AZURE_RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
+  AZURE_ML_WORKSPACE: ${{ secrets.AZURE_ML_WORKSPACE }}
 
 on:
   schedule:
@@ -39,9 +39,6 @@ jobs:
         echo "Contents of data_upload.yml:"
         cat data_upload.yml
       working-directory: jobs
-    - name: edit yaml files
-      run: python update_training_yamls.py
-      working-directory: jobs
     - name: azure login
       uses: azure/login@v1
       with:
@@ -58,7 +55,7 @@ jobs:
         az version
         az extension list
         az ml -h
-        az ml data create -f data_upload.yml --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --workspace-name ${{ env.AZURE_ML_WORKSPACE }}
+        az ml data create -f data_upload.yml bramastyaz-rg ${{ env.AZURE_RESOURCE_GROUP }} mlops-thesis ${{ env.AZURE_ML_WORKSPACE }}
       working-directory: jobs
     - name: Commit and push if changed
       run: |
