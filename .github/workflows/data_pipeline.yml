@@ -55,7 +55,7 @@ jobs:
         az version
         az extension list
         az ml -h
-        az ml data create -f data_upload.yml bramastyaz-rg ${{ env.AZURE_RESOURCE_GROUP }} mlops-thesis ${{ env.AZURE_ML_WORKSPACE }}
+        az ml data create -f data_upload.yml --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --workspace-name ${{ env.AZURE_ML_WORKSPACE }}
       working-directory: jobs
     - name: Commit and push if changed
       run: |
