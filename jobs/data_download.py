@@ -33,7 +33,7 @@ def save_to_data_upload(df, tags, ticker):
     }
     
     with open('data_upload.yml', 'w') as file:
-        yaml.dump(yaml_content, file)
+        yaml.dump(yaml_content, file, default_flow_style=False)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -43,7 +43,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     df = get_ticker_data(args.ticker, args.start, args.end)
-    df.to_csv(f'../data/{args.ticker}.csv', index=False)
+    df.to_csv(f'data/{args.ticker}.csv', index=False)
     
     tags = get_dataset_tags(df)
     save_to_data_upload(df, tags, args.ticker)
