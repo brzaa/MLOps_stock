@@ -1,9 +1,9 @@
 import yfinance as yf
 import pandas as pd
+import numpy as np
 from datetime import datetime
 import argparse
 import yaml
-import os
 
 def get_ticker_data(ticker, start, end):
     stock = yf.Ticker(ticker)
@@ -14,11 +14,11 @@ def get_ticker_data(ticker, start, end):
 
 def get_dataset_tags(df):
     return {
-        'Length': len(df),
+        'Length': int(len(df)),
         'Start': df['Date'].min().strftime('%Y-%m-%d'),
         'End': df['Date'].max().strftime('%Y-%m-%d'),
-        'Median': round(df['Close'].median(), 2),
-        'SD': round(df['Close'].std(), 2)
+        'Median': float(df['Close'].median()),
+        'SD': float(df['Close'].std())
     }
 
 def save_to_data_upload(df, tags, ticker):
@@ -33,8 +33,16 @@ def save_to_data_upload(df, tags, ticker):
         'version': current_date
     }
     
+    class FloatDumper(yaml.SafeDumper):
+        def represent_float(self, data):
+            if np.isnan(data):
+                return self.represent_scalar('tag:yaml.org,2002:null', 'null')
+            return super().represent_float(data)
+
+    FloatDumper.add_representer(float, FloatDumper.represent_float)
+    
     with open('data_upload.yml', 'w') as file:
-        yaml.dump(yaml_content, file, default_flow_style=False)
+        yaml.dump(yaml_content, file, default_flow_style=False, Dumper=FloatDumper)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -46,6 +54,7 @@ if __name__ == "__main__":
     df = get_ticker_data(args.ticker, args.start, args.end)
     
     # Create data directory if it doesn't exist
+    import os
     os.makedirs('data', exist_ok=True)
     
     df.to_csv(f'data/{args.ticker}.csv', index=False)
@@ -55,3 +64,4 @@ if __name__ == "__main__":
 
     print(f"Data downloaded and saved for {args.ticker}")
     print(f"Dataset tags: {tags}")
+    print("data_upload.yml file created successfully")
