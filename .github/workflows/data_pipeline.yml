@@ -34,6 +34,11 @@ jobs:
     - name: download ticker data and update yml file
       run: python data_download.py --ticker ${{ env.ticker }} --start ${{ env.start }} --end ${{ env.end }}
       working-directory: jobs
+    - name: Print data_upload.yml contents
+      run: |
+        echo "Contents of data_upload.yml:"
+        cat data_upload.yml
+      working-directory: jobs
     - name: edit yaml files
       run: python update_training_yamls.py
       working-directory: jobs
