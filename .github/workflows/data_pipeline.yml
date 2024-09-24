@@ -4,8 +4,8 @@ env:
   ticker: MASB.JK
   start: 2020-01-01
   end: 2023-12-31
-  AZURE_RESOURCE_GROUP: ${{ secrets.AZURE_RESOURCE_GROUP }}
-  AZURE_ML_WORKSPACE: ${{ secrets.AZURE_ML_WORKSPACE }}
+  AZURE_RESOURCE_GROUP: bramastyaz-rg
+  AZURE_ML_WORKSPACE: mlops-thesis
 
 on:
   schedule:
@@ -55,6 +55,8 @@ jobs:
         az version
         az extension list
         az ml -h
+        echo "Resource Group: ${{ env.AZURE_RESOURCE_GROUP }}"
+        echo "Workspace: ${{ env.AZURE_ML_WORKSPACE }}"
         az ml data create -f data_upload.yml --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --workspace-name ${{ env.AZURE_ML_WORKSPACE }}
       working-directory: jobs
     - name: Commit and push if changed
