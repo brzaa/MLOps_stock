@@ -1,6 +1,6 @@
-GROUP="RG"
-LOCATION="eastus"
-WORKSPACE="AzureMLWorkspace"
+GROUP="bramastyaz-rg"
+LOCATION="East US 2"
+WORKSPACE="mlops-thesis"
 
 az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
 
