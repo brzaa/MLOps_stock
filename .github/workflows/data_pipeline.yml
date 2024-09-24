@@ -12,6 +12,7 @@ on:
   push:
     paths:
       - 'jobs/data_download.py'
+      - 'jobs/update_training_yamls.py'
       - '.github/workflows/data_pipeline.yml'
 
 jobs:
@@ -20,6 +21,10 @@ jobs:
     steps:
     - name: checkout repository
       uses: actions/checkout@v2
+    - name: List contents of jobs directory
+      run: |
+        echo "Contents of jobs directory:"
+        ls -la jobs/
     - name: setup python 3.9
       uses: actions/setup-python@v4
       with: 
