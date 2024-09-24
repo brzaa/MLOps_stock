@@ -29,15 +29,18 @@ jobs:
         python -m pip install --upgrade pip
         pip install numpy==1.23.5 pandas==1.5.3 yfinance==0.2.18 pyyaml
     - name: download ticker data and update yml file
-      run: python jobs/data_download.py --ticker ${{ env.ticker }} --start ${{ env.start }} --end ${{ env.end }}
+      run: python data_download.py --ticker ${{ env.ticker }} --start ${{ env.start }} --end ${{ env.end }}
+      working-directory: jobs
     - name: edit yaml files
-      run: python jobs/update_training_yamls.py
+      run: python update_training_yamls.py
+      working-directory: jobs
     - name: azure login
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     - name: upload to azure
-      run: az ml data create -f jobs/data_upload.yml
+      run: az ml data create -f data_upload.yml
+      working-directory: jobs
     - name: Commit and push if changed
       run: |
         git config --global user.email "action@github.com"
