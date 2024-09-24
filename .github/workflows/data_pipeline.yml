@@ -57,6 +57,8 @@ jobs:
         az ml -h
         echo "Resource Group: ${{ env.AZURE_RESOURCE_GROUP }}"
         echo "Workspace: ${{ env.AZURE_ML_WORKSPACE }}"
+        echo "Contents of data_upload.yml:"
+        cat data_upload.yml
         az ml data create -f data_upload.yml --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --workspace-name ${{ env.AZURE_ML_WORKSPACE }}
       working-directory: jobs
     - name: Commit and push if changed
