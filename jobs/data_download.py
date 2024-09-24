@@ -7,12 +7,9 @@ import yaml
 import re
 
 def sanitize_name(name):
-    # Remove any character that's not alphanumeric, dash, or underscore
     sanitized = re.sub(r'[^a-zA-Z0-9\-_]', '', name)
-    # Ensure the name starts with a letter or number
     if not sanitized[0].isalnum():
         sanitized = 'a' + sanitized
-    # Truncate to 255 characters if necessary
     return sanitized[:255]
 
 def get_ticker_data(ticker, start, end):
@@ -32,16 +29,16 @@ def get_dataset_tags(df):
     }
 
 def save_to_data_upload(df, tags, ticker):
-    current_date = datetime.now().strftime('%Y%m%d')
+    current_timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
     sanitized_ticker = sanitize_name(ticker)
     yaml_content = {
         '$schema': 'https://azuremlschemas.azureedge.net/latest/data.schema.json',
         'type': 'uri_file',
-        'name': sanitized_ticker,
+        'name': f"{sanitized_ticker}_data",
         'description': f"Stock data for {ticker} during {tags['Start']}:{tags['End']} in 1d interval.",
         'path': f'data/{sanitized_ticker}.csv',
         'tags': tags,
-        'version': current_date
+        'version': current_timestamp
     }
     
     class FloatDumper(yaml.SafeDumper):
