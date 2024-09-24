@@ -1,8 +1,12 @@
 $schema: https://azuremlschemas.azureedge.net/latest/data.schema.json
-            
+description: Stock data for MASB.JK during 2021-06-30:2023-12-29 in 1d interval.
+name: MASBJK_data
+path: data/MASBJK.csv
+tags:
+  End: '2023-12-29'
+  Length: 613
+  Median: 3480.0
+  SD: 99.57830458697144
+  Start: '2021-06-30'
 type: uri_file
-name: 'WIPRO'
-description: Stock data for WIPRO.NS during 2022-02-21:2023-02-17 in 1d interval.
-path: '../data/WIPRO.NS.csv'
-tags: {'Length': 248, 'Start': '2022-02-21', 'End': '2023-02-17', 'Median': 412.38, 'SD': 67.48}
-version: 20230220
+version: '20240924162655'
