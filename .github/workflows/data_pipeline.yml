@@ -1,12 +1,10 @@
-name: data upload to azure
-
+name: Data Upload to Azure ML
 env:
   ticker: MASB.JK
   start: 2020-01-01
   end: 2023-12-31
   AZURE_RESOURCE_GROUP: bramastyaz-rg
   AZURE_ML_WORKSPACE: mlops-thesis
-
 on:
   schedule:
     - cron: "1 1 * * 1"
@@ -16,22 +14,21 @@ on:
       - 'jobs/data_download.py'
       - 'jobs/update_training_yamls.py'
       - '.github/workflows/data_pipeline.yml'
-
 jobs:
   datawork:
     runs-on: ubuntu-latest
     steps:
-    - name: checkout repository
+    - name: Checkout repository
       uses: actions/checkout@v2
-    - name: setup python 3.9
+    - name: Setup Python 3.9
       uses: actions/setup-python@v4
       with: 
         python-version: "3.9"
-    - name: install python packages
+    - name: Install Python packages
       run: |
         python -m pip install --upgrade pip
         pip install numpy==1.23.5 pandas==1.5.3 yfinance==0.2.18 pyyaml
-    - name: download ticker data and update yml file
+    - name: Download ticker data and update YAML file
       run: python data_download.py --ticker ${{ env.ticker }} --start ${{ env.start }} --end ${{ env.end }}
       working-directory: jobs
     - name: Print data_upload.yml contents
@@ -39,7 +36,7 @@ jobs:
         echo "Contents of data_upload.yml:"
         cat data_upload.yml
       working-directory: jobs
-    - name: azure login
+    - name: Azure login
       uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
@@ -50,7 +47,7 @@ jobs:
       run: |
         az version
         az extension add -n ml -y
-    - name: upload to azure
+    - name: Update Azure ML data asset
       run: |
         az version
         az extension list
@@ -59,7 +56,7 @@ jobs:
         echo "Workspace: ${{ env.AZURE_ML_WORKSPACE }}"
         echo "Contents of data_upload.yml:"
         cat data_upload.yml
-        az ml data create -f data_upload.yml --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --workspace-name ${{ env.AZURE_ML_WORKSPACE }}
+        az ml data update -f data_upload.yml --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --workspace-name ${{ env.AZURE_ML_WORKSPACE }}
       working-directory: jobs
     - name: Commit and push if changed
       run: |
