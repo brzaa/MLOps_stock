@@ -1,0 +1,14 @@
+name: stock-prediction-env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8
+  - pip
+  - pip:
+    - azureml-core
+    - torch
+    - pytorch-lightning
+    - pandas
+    - scikit-learn
+    - mlflow
