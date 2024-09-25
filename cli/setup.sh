@@ -1,5 +1,5 @@
 GROUP="bramastyaz-rg"
-LOCATION="East US 2"
+LOCATION="eastus2"
 WORKSPACE="mlops-thesis"
 
 az configure --defaults group=$GROUP workspace=$WORKSPACE location=$LOCATION
