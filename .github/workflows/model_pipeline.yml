@@ -1,8 +1,6 @@
 name: Model Pipeline
 
 on:
-  push:
-    branches: [ main ]
   workflow_dispatch:
   schedule:
     - cron: '0 1 * * 1'  # Runs at 1 AM every Monday
@@ -12,35 +10,22 @@ env:
   AZURE_ML_WORKSPACE: mlops-thesis
 
 jobs:
-  data-and-train:
+  train-and-register:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install yfinance pandas numpy pyyaml
-
-      - name: Download data
-        run: echo "python jobs/data_download.py"  # Placeholder, uncomment when ready
 
       - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Install Azure ML CLI
+      - name: Setup Azure ML CLI
         run: |
           az extension add -n ml -y
+          az configure --defaults group=${{ env.AZURE_RESOURCE_GROUP }} workspace=${{ env.AZURE_ML_WORKSPACE }}
 
-      - name: Upload data to Azure
+      - name: Train Model
         run: |
-          echo "az ml data create -f jobs/data_upload.yml --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --workspace-name ${{ env.AZURE_ML_WORKSPACE }}"
-        # Uncomment the above line and remove the echo when ready to actually run the command
+          az ml job create --file jobs/train.yml
