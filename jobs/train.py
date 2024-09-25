@@ -5,6 +5,7 @@ import pandas as pd
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.preprocessing import MinMaxScaler
 import mlflow
+import mltable
 
 class StockPriceModel(pl.LightningModule):
     def __init__(self):
@@ -27,7 +28,8 @@ class StockPriceModel(pl.LightningModule):
         return torch.optim.Adam(self.parameters(), lr=0.001)
 
 def prepare_data(data_path):
-    df = pd.read_csv(data_path)
+    tbl = mltable.load(data_path)
+    df = tbl.to_pandas_dataframe()
     df['Date'] = pd.to_datetime(df['Date'])
     df = df.sort_values('Date')
     
@@ -44,8 +46,7 @@ def prepare_data(data_path):
 
 if __name__ == "__main__":
     mlflow.pytorch.autolog()
-
-    data_path = "input_data/MASB.JK.csv"  # Update this path
+    data_path = os.environ.get("input_data")
     X, y = prepare_data(data_path)
     
     dataset = TensorDataset(X, y)
