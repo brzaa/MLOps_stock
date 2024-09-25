@@ -41,7 +41,7 @@ def create_mltable_file(ticker):
         ]
     }
     
-    with open(f'data/{sanitized_ticker}.mltable', 'w') as file:
+    with open(f'data/{sanitized_ticker}/MLTable', 'w') as file:
         yaml.dump(mltable_content, file, default_flow_style=False)
 
 def save_to_data_upload(df, tags, ticker):
@@ -52,7 +52,7 @@ def save_to_data_upload(df, tags, ticker):
         'type': 'mltable',
         'name': f"{sanitized_ticker}_data",
         'description': f"Stock data for {ticker} during {tags['Start']}:{tags['End']} in 1d interval.",
-        'path': f'data/{sanitized_ticker}.mltable',
+        'path': f'./data/{sanitized_ticker}',
         'tags': tags,
         'version': current_timestamp
     }
@@ -76,10 +76,10 @@ if __name__ == "__main__":
     
     df = get_ticker_data(args.ticker, args.start, args.end)
     
-    os.makedirs('data', exist_ok=True)
-    
     sanitized_ticker = sanitize_name(args.ticker)
-    df.to_csv(f'data/{sanitized_ticker}.csv', index=False)
+    os.makedirs(f'data/{sanitized_ticker}', exist_ok=True)
+    
+    df.to_csv(f'data/{sanitized_ticker}/{sanitized_ticker}.csv', index=False)
     
     create_mltable_file(args.ticker)
     
@@ -89,4 +89,4 @@ if __name__ == "__main__":
     print(f"Data downloaded and saved for {args.ticker}")
     print(f"Dataset tags: {tags}")
     print("data_upload.yml file created successfully")
-    print(f"MLTable file created: data/{sanitized_ticker}.mltable")
+    print(f"MLTable file created: data/{sanitized_ticker}/MLTable")
