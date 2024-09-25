@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Azure Login
         uses: azure/login@v1
         with:
@@ -25,7 +25,7 @@ jobs:
           az ml job create --file jobs/train.yml --debug > debug_output.txt 2>&1
         continue-on-error: true
       - name: Upload debug output
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: debug-output
           path: debug_output.txt
