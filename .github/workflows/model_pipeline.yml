@@ -1,6 +1,8 @@
 name: Model Pipeline
 
 on:
+  push:
+    branches: [ main ]
   workflow_dispatch:
   schedule:
     - cron: '0 1 * * 1'  # Runs at 1 AM every Monday
@@ -27,7 +29,7 @@ jobs:
           pip install yfinance pandas numpy pyyaml
 
       - name: Download data
-        run: python jobs/data_download.py
+        run: echo "python jobs/data_download.py"  # Placeholder, uncomment when ready
 
       - name: Azure Login
         uses: azure/login@v1
@@ -40,12 +42,5 @@ jobs:
 
       - name: Upload data to Azure
         run: |
-          az ml data create -f jobs/data_upload.yml \
-                            --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
-                            --workspace-name ${{ env.AZURE_ML_WORKSPACE }}
-
-    # Add steps for model training here
-    # For example:
-    # - name: Train model
-    #   run: python train.py
-    # Add steps for model evaluation and registration here
+          echo "az ml data create -f jobs/data_upload.yml --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --workspace-name ${{ env.AZURE_ML_WORKSPACE }}"
+        # Uncomment the above line and remove the echo when ready to actually run the command
