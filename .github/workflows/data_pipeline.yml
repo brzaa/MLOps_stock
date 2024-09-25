@@ -56,7 +56,7 @@ jobs:
         echo "Workspace: ${{ env.AZURE_ML_WORKSPACE }}"
         echo "Contents of data_upload.yml:"
         cat data_upload.yml
-        az ml data update --name MASBJK_ -f data_upload.yml --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --workspace-name ${{ env.AZURE_ML_WORKSPACE }}
+        az ml data update --name MASBJK_data --path ./data/MASBJK --type mltable --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --workspace-name ${{ env.AZURE_ML_WORKSPACE }}
       working-directory: jobs
     - name: Commit and push if changed
       run: |
