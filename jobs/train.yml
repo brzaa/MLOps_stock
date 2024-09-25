@@ -4,10 +4,7 @@ command: python train.py
 inputs:
   input_data: 
     path: azureml:MASBJK_:1
-environment: 
-  conda_file: conda_env.yml
-  image: mcr.microsoft.com/azureml/openmpi3.1.2-ubuntu18.04:latest
-  image: azureml/openmpi4.1.0-ubuntu20.04:latest  # or any other suitable image
+environment: azureml:AzureML-pytorch-1.10-ubuntu18.04-py38-cuda11-gpu@latest
 compute: azureml:cpu-cluster
 experiment_name: stock-price-prediction
 description: Train a PyTorch LSTM model for stock price prediction
