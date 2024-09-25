@@ -3,7 +3,7 @@ name: Model Pipeline
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 1 * * 1"  # Runs at 1 AM every Monday
+    - cron: '0 1 * * 1'  # Runs at 1 AM every Monday
 
 env:
   AZURE_RESOURCE_GROUP: bramastyaz-rg
@@ -48,5 +48,4 @@ jobs:
     # For example:
     # - name: Train model
     #   run: python train.py
-
     # Add steps for model evaluation and registration here
