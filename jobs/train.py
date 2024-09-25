@@ -45,7 +45,7 @@ def prepare_data(data_path):
 if __name__ == "__main__":
     mlflow.pytorch.autolog()
 
-    data_path = "path/to/MASB.JK.csv"  # Update this path
+    data_path = "input_data/MASB.JK.csv"  # Update this path
     X, y = prepare_data(data_path)
     
     dataset = TensorDataset(X, y)
