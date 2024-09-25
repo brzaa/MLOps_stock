@@ -1,5 +1,5 @@
 $schema: https://azuremlschemas.azureedge.net/latest/data.schema.json
-name: MASBJK_data
+name: MASBJK_data_new  # Changed from MASBJK_data to MASBJK_data_new
 description: Stock data for MASB.JK during 2021-06-30:2023-12-29 in 1d interval.
 type: uri_file
 path: ./data/MASBJK
