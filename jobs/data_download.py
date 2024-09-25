@@ -40,6 +40,21 @@ def save_to_data_upload(df, tags, ticker):
         'tags': tags,
         'version': current_timestamp
     }
+
+def create_mltable_file(ticker):
+    sanitized_ticker = sanitize_name(ticker)
+    mltable_content = {
+        'type': 'mltable',
+        'paths': [
+            {
+                'file': f'{sanitized_ticker}.csv',
+                'delimiter': ','
+            }
+        ]
+    }
+    
+    with open(f'data/{sanitized_ticker}.mltable', 'w') as file:
+        yaml.dump(mltable_content, file, default_flow_style=False)
     
     class FloatDumper(yaml.SafeDumper):
         def represent_float(self, data):
