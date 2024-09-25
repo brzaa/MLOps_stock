@@ -7,7 +7,7 @@ env:
   AZURE_ML_WORKSPACE: mlops-thesis
 on:
   schedule:
-    - cron: "1 1 * * 1"
+    - cron: "1 1 * *1"
   workflow_dispatch:
   push:
     paths:
