@@ -1,12 +1,12 @@
 $schema: https://azuremlschemas.azureedge.net/latest/data.schema.json
-name: MASBJK_
-type: mltable
 description: Stock data for MASB.JK during 2021-06-30:2023-12-29 in 1d interval.
-path: azureml://datastores/workspaceblobstore/paths/LocalUpload/766d573ec8949744221fc520033c51fc/MASBJK.csv
+name: MASBJK_data
+path: ./data/MASBJK
 tags:
   End: '2023-12-29'
   Length: 613
   Median: 3480.0
   SD: 99.57830458697144
   Start: '2020-01-01'
-version: '20240925143353'
+type: mltable
+version: '20240925144138'
