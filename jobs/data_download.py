@@ -33,10 +33,10 @@ def save_to_data_upload(df, tags, ticker):
     sanitized_ticker = sanitize_name(ticker)
     yaml_content = {
         '$schema': 'https://azuremlschemas.azureedge.net/latest/data.schema.json',
-        'type': 'uri_file',
+        'type': 'mltable',
         'name': f"{sanitized_ticker}_data",
         'description': f"Stock data for {ticker} during {tags['Start']}:{tags['End']} in 1d interval.",
-        'path': f'data/{sanitized_ticker}.csv',
+        'path': f'./data/{sanitized_ticker}.csv',
         'tags': tags,
         'version': current_timestamp
     }
