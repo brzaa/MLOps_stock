@@ -35,8 +35,14 @@ def create_mltable_file(ticker):
         'type': 'mltable',
         'paths': [
             {
-                'file': f'{sanitized_ticker}.csv',
-                'delimiter': ','
+                'pattern': f'{sanitized_ticker}.csv'
+            }
+        ],
+        'transformations': [
+            {
+                'read_delimited': {
+                    'delimiter': ','
+                }
             }
         ]
     }
