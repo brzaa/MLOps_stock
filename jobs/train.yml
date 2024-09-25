@@ -4,7 +4,7 @@ command: python train.py
 inputs:
   input_data: 
     path: azureml:MASBJK_data@latest
-    mode: ro_mount
+    mode: direct
 environment:
   name: stock-prediction-env
   conda_file: custom_env.yml
